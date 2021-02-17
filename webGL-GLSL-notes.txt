@@ -15,7 +15,7 @@ GLSL language:
   }
 
 Javascript implementation: (wrapped in a template string)
-  const fragmentShader = `
+  const fragmentShader = /* glsl */ `
   unifrom vec3 color;
   uniform float opacity;
 

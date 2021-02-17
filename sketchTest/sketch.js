@@ -4,7 +4,12 @@ global.THREE = require('three');
 // Include any additional ThreeJS examples below
 require('three/examples/js/controls/OrbitControls');
 
+//require('three/examples/jsm/loaders/GLTFLoader.js')
+
+//console.log(GLTFLoader)
+
 const canvasSketch = require('canvas-sketch');
+const { RGBA_ASTC_10x5_Format } = require('three');
 
 const settings = {
   // dimensions: [200, 200],
@@ -21,11 +26,11 @@ const sketch = ({ context }) => {
   });
 
   // WebGL background color
-  renderer.setClearColor('#111111', 1);
+  renderer.setClearColor('#000000', 1);
 
   // Setup a camera
   const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100);
-  camera.position.set(0, 0, -5);
+  camera.position.set(0, 0.2, -5);
   camera.lookAt(new THREE.Vector3());
 
   // Setup camera controller
@@ -43,9 +48,13 @@ const sketch = ({ context }) => {
   const textureMoon = loader.load('moon.jpg')
 
   // Setup a material
-  const material = new THREE.MeshBasicMaterial({ map: texture });
+  const material = new THREE.MeshStandardMaterial({
+    roughness: 1,
+    metalness: 0,
+    map: texture
+  });
 
-  const materialMoon = new THREE.MeshBasicMaterial({ map:textureMoon })
+  const materialMoon = new THREE.MeshStandardMaterial({ map: textureMoon })
 
   // Setup a mesh with geometry + material
   const mesh = new THREE.Mesh(geometry, material);
@@ -58,6 +67,14 @@ const sketch = ({ context }) => {
   meshMoon.scale.setScalar(0.25)
   moonGroup.add(meshMoon)
   scene.add(moonGroup)
+
+  const light = new THREE.PointLight('white', 1.5)
+  light.position.set(-1, 1, -2)
+  scene.add(light)
+
+  scene.add(new THREE.PointLightHelper(light, 0.2))
+  scene.add(new THREE.GridHelper(10, 20))
+  scene.add(new THREE.AxesHelper(5))
 
   // draw each frame
   return {
